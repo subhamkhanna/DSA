@@ -1,0 +1,70 @@
+Shortest Job First Scheduling JAVA Code
+
+class Solution {
+    public int[] getOrder(int[][] tasks) {
+        // There are three core tasks in this problem
+        //  a) If we are at a starting time in which no task is available
+        //  as the enqueue time of all the unprocessed taasks are more than
+        //  this time and cpu is idle than we need to reach to next earliest
+        //  time when any task is available so for this we are maintaining an
+        // array which is sorted on the basis of enque time
+        //  b) When we get some tasks which are available at current time than 
+        // we need to pick that task out of them which is having shortest processing 
+        // time and to acheive this we need to maintain a min heap. 
+        // So in total in above two steps we are first incrementing current time to 
+        // the first available enque time and than all the tasks which are avaiilable
+        // at that time are enques (inserted) in to min heap.
+        // c) min heap top element will be removed and its processing time will be    added up into the current time to make new current time and all the tasks available till new current time will be added and so on 
+        // d) since there is a requirement that if two tasks processing time are same
+        // than we will pick the one with low index so to achieve this we will      ///maintain a data structure which will keep three elements of the task 
+        // 1: its enqueue time
+        // 2: its processing time
+        // 3: its index
+
+        //First of all create an array which keeps all the three required elementes
+        // for all taks are stored in the sorted manner of their enque time
+
+        int[][] sorted = new int[tasks.length][3];
+        for(int i=0; i<tasks.length; i++){
+            sorted[i][0] = tasks[i][0];
+            sorted[i][1] = tasks[i][1];
+            sorted[i][2] = i;
+        }
+
+        Arrays.sort(sorted, (a,b) -> a[0] - b[0] );
+
+        // Now minheap will be having elements of sorted array defined above type
+
+        PriorityQueue<int[]> pqueue = new PriorityQueue<int[]>((a,b) -> a[1] != b[1] 
+        ? a[1] - b[1] : a[2] - b[2]);
+
+        // Initialize output Array
+        int[] output = new int[tasks.length];
+        
+        // Business Logic
+        int totalTasks = tasks.length;
+        int currentTask = 0;
+        int currentTime = 0;
+        int index = 0;
+
+        while(currentTask < totalTasks || !pqueue.isEmpty()) {
+            if(currentTask < totalTasks && pqueue.isEmpty()){
+                if(currentTime < sorted[currentTask][0])
+                        currentTime = sorted[currentTask][0];
+            }
+
+            while(currentTask < totalTasks && currentTime >= sorted[currentTask][0]){
+                pqueue.offer(sorted[currentTask++]);
+            }
+
+            
+            int processingTime = pqueue.peek()[1];
+            currentTime += processingTime;
+            output[index++] = pqueue.peek()[2];
+            pqueue.remove();
+        }
+        
+        return output;
+
+    }
+}
