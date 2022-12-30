@@ -1,0 +1,35 @@
+
+All possible paths from source 0 node to destination n-1 node in a directed acyclic graph which does not have any 
+loop in it.
+
+It is a DFS based approach which explores all the connected paths from source node and keep them adding
+in answer list.
+
+
+
+class Solution {
+    static List<List<Integer>> answer = new ArrayList<>();
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        answer.clear();
+        List<Integer> arrList = new ArrayList<>();
+        arrList.add(0);
+        dfs(0,graph,arrList, graph.length-1);
+        arrList.remove(0);
+        
+
+        return answer;
+    }
+
+    void dfs(int source, int[][] graph, List<Integer> arrList, int lastNode){
+        if(source == lastNode){            
+            answer.add(new ArrayList<>(arrList));
+            arrList.remove(Integer.valueOf(lastNode));
+        } else {
+            for(int i=0; i<graph[source].length; i++){
+                arrList.add(graph[source][i]);
+                dfs(graph[source][i], graph, arrList, lastNode);
+                arrList.remove(Integer.valueOf(graph[source][i]));
+            }
+        }
+    }
+}
