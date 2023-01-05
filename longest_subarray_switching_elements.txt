@@ -1,0 +1,66 @@
+/******************************************************************************
+
+                            Online Java Compiler.
+                Code, Compile, Run and Debug java program online.
+Write your code in this editor and press "Run" button to execute it.
+
+*******************************************************************************/
+
+public class Main
+{
+	public static void main(String[] args) {
+		System.out.println("Hello World");
+		//int arr[] = {1,1,1,1,1};  // answer = 5
+        //int arr[] = {1,2,3,4,5};//  answer = 2
+        //int arr[] = {2,4,2,4}; // answer = 4
+        //int arr[] = {2,3,2,4,2};  //answer = 3
+        int arr[] = {-5,3,-5,3,-5,6}; // answer = 5
+		System.out.println(solution(arr));
+	}
+	
+	
+/*#This problem says that the number which is available at odd indexes should be equal and even indexes should be
+#equal. This problem don't say that number present at odd and even places can or can not be equal to each other.
+#So the longest consecutive sequence which follows above condition is called lonngest array with switching elements.
+#The single element array will return 1 as answer.
+
+#e.g.
+#arr[] = {1,1,1,1,1}  answer = 5
+#arr[] = {1,2,3,4,5}  answer = 1
+#arr[] = {2,4,2,4} answer = 4
+#arr[] = {2,3,2,4,2}  answer = 3
+#arr[] = {-5,3,-5,3,-5,6}  answer = 5*/
+
+static int solution(int[] arr){
+  
+  if(arr.length == 1)  return 1;
+
+  int even = arr[0];
+  int odd = arr[1];
+  int start = 0;
+  int max_length = 0;
+
+  for(int i=2; i<arr.length; i++){
+
+     if( (i%2 == 0 || arr[i] == odd) && (i%2 !=0 || arr[i] == even)) {
+	continue;	   
+     } 
+
+     max_length = Math.max(max_length, i - start);
+     start = i-1;
+     if(i%2 == 0) {
+	even = arr[i]; odd = arr[i-1];
+     } else {
+        even = arr[i-1]; odd = arr[i];
+     }
+
+  }
+
+  max_length = Math.max(max_length, arr.length - start);
+
+  return max_length;
+
+}
+
+
+}
