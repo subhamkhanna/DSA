@@ -1,0 +1,40 @@
+// Maximum number of icecream
+// Counting sort approach
+
+It is a sweltering summer day, and a boy wants to buy some ice cream bars.
+
+At the store, there are n ice cream bars. You are given an array costs of length n, where costs[i] is the price of the ith ice cream bar in coins. The boy initially has coins coins to spend, and he wants to buy as many ice cream bars as possible. 
+
+Return the maximum number of ice cream bars the boy can buy with coins coins.
+
+Note: The boy can buy the ice cream bars in any order.
+
+
+
+
+
+class Solution {
+    public int maxIceCream(int[] costs, int coins) {
+        
+        int answer = 0;
+        int maxCost = costs[0];
+        for(int i=1; i<costs.length; i++){
+            maxCost = Math.max(maxCost, costs[i]);
+        }
+
+        int costFrequencies[] = new int[maxCost+1];
+        for(int cost : costs) costFrequencies[cost]++;
+
+        for(int i=1; i<=maxCost; i++){
+            if(costFrequencies[i] == 0) continue;
+
+            if(i > coins) return answer;
+
+            int uses = Math.min(costFrequencies[i], coins/i);
+            answer += uses;
+            coins -= i*uses;
+        }
+
+        return answer;
+    }
+}
