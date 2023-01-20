@@ -1,0 +1,51 @@
+
+Non Decreasing Subsequence
+
+Given an integer array nums, return all the different possible non-decreasing subsequences of the given array with at least two elements. You may return the answer in any order.
+
+
+
+class Solution {
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        // This is a very good learning
+        // In this problem we can not solve it using any greedy approach and nature of constraints in the question makes it confirm that we should generate all possible subsequences and test them
+        // when we will be generating all possible subsequences than we should keep one thing in implementation that same number subsequences can be repeatedly generated e.g. 4 6 7 7 in this example 4 6 7 and 4 6 7 can be generated two times first with index 0 1 2 and second time 0 1 3. Now to overcome this problem effectively we can take help from a data structure in which when we are going to store duplicate set it will not accept and will keep only one entry of that subsequence thus we can use hashset which will keep subsequences which will be list of integers
+
+        Set<List<Integer>> sequences = new HashSet<List<Integer>>();
+// For generating all subsets of a set we can use bitmasking technique where if there are n elements than we can generate integers from 1 to 2^n - 1 in which each integer will repesent a unique combination of number of bits and we can choose elements from the corresponding indexes in which the bit is one for a particular integer. so in total we can choose elements in 2^n - 1 ways 
+// also which elements we are choosing can be easily calculated by bitwise AND operation with 1 and for n elements we will shift the integer calculate in above step to left shift one by one and will keep adding the element in the list
+    
+        int n = nums.length;
+
+     for(int i=1; i<(1<<n); i++){
+         int bitmask = i;
+         List<Integer> list = new ArrayList<>();
+         //boolean increasing = true;
+         for(int j=0; j<n; j++){
+             //int last = -101;
+             if(((bitmask>>j) & 1) == 1) {
+                 //if(nums[j] >= last) {
+                     //last = nums[j];
+                    list.add(nums[j]);    
+                 //} else {
+                     //increasing = false;
+                     //j=n;
+                 //}
+             }
+         }
+
+        if(list.size() >= 2 /*&& increasing /*!sequences.contains(list)*/){
+         boolean increasing  = true;
+         for(int k=0; k<list.size()-1 && increasing; k++){
+             increasing &= list.get(k) <= list.get(k+1);
+         }
+         if(increasing) 
+            sequences.add(list);   
+        }
+         
+     }
+
+     return new ArrayList<>(sequences);
+
+    }
+}
