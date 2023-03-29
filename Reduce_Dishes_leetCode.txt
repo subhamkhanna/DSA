@@ -1,0 +1,78 @@
+Intuition
+The idea is generated from a fact if all numbers are positive than select all in increasing order
+
+Approach
+1: Sort the array in ascending order
+2: If there is no positive number greater than 0 return 0;
+3: Calculate the sum of positive integers and keep it in a variable say positiveSum;
+4: Start adding negative variable from last in the sorted array till the point negative variable sums remain smaller than positive variable sum
+5: In the above step we will get how many negative integers we can consider while considering the answer
+6: Run desired calculation on the remaining number (you can check the code) and get the answer
+
+Complexity
+Time complexity:
+O(NlogN) sorting
+
+Space complexity:
+O(1)
+
+Code
+class Solution {
+    public int maxSatisfaction(int[] satisfaction) {
+        Arrays.sort(satisfaction);
+
+        boolean allNegative = true;
+        int firstPositiveIndex = -1;
+         int lastNegativeIndex = -1;
+
+        for(int s = 0; s<satisfaction.length; s++) {
+            if(satisfaction[s]>0){              
+                allNegative = false; 
+                firstPositiveIndex = s;
+                break;
+            } 
+        }
+            
+        if(allNegative) return 0;
+
+       // System.out.println("First Positive Index "+firstPositiveIndex);
+
+        for(int s = satisfaction.length - 1; s>=0; s--) {
+            if(satisfaction[s]<0){              
+                lastNegativeIndex = s;
+                break;
+            } 
+        }
+
+        //System.out.println("Last Negative Index "+lastNegativeIndex);
+
+        int index = 1;        
+        int positiveSum = 0;
+        for(int i = lastNegativeIndex+1; i<satisfaction.length; i++){
+            positiveSum += satisfaction[i];
+        }
+
+       // System.out.println("positive Sum " + positiveSum);
+
+        int negativeSum = 0;
+        int nIndex = lastNegativeIndex+1;
+        //System.out.println("1 last negative Index = " +nIndex);
+        while(nIndex >0 && negativeSum <= positiveSum){
+             nIndex--;
+             negativeSum += Math.abs(satisfaction[nIndex]);
+             //System.out.println("nIndex = "+nIndex + " nnSum "+negativeSum);
+        }
+
+       if(negativeSum>positiveSum) nIndex++;
+
+        int totalSatisfaction = 0;
+
+        //System.out.println(nIndex+ " ");
+
+        for(int i = nIndex; i<satisfaction.length; i++){
+            totalSatisfaction += satisfaction[i]*(i+1 - nIndex);
+        }
+        
+        return totalSatisfaction;
+    }
+}
